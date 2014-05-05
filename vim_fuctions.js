@@ -49,22 +49,19 @@
 	}
 	document.addEventListener('keypress', function(event) {
 		if(!change_mod){
-		    if(event.keyCode == 104) {
+		    if(event.keyCode == 104){//h
 		    	h_pressed();   	
-		    }
-		    else if(event.keyCode == 108) {
+		   }else if(event.keyCode == 108){//l
 		    	l_pressed();
-		    }
-		   else if(event.keyCode == 107) {
-		        	k_pressed();
-		    }
-		   else if(event.keyCode == 106) {
+		   }else if(event.keyCode == 107){//k
+		        k_pressed();
+		   }else if(event.keyCode == 106){//j
 		   		j_pressed();
-		   }else if(event.keyCode == 48) {
-			   		n0_pressed();
-		   }else if(event.keyCode == 36) {
-			   		sdollar_pressed();
-		   }else if(event.keyCode == 114) {
+		   }else if(event.keyCode == 48){//0
+			   	n0_pressed();
+		   }else if(event.keyCode == 36){//$
+			   	sdollar_pressed();
+		   }else if(event.keyCode == 114){//r
 		   		r_pressed();
 		   }
 		}else{
@@ -91,13 +88,20 @@
 	}
 	function h_pressed() {
 		if (position_x >0 && position_x>get_first_informed_column(position_y)){
-			pass_focus(position_x,position_y,--position_x,position_y);      
+			var aux =position_x-1;
+			while( get_value(aux,position_y)=='') aux--;
+			pass_focus(position_x,position_y,aux,position_y); 
+			position_x=aux;
 			most_x_know =position_x;
+			
 		}
 	}
 	function l_pressed() {
 		if (position_x <79 && position_x<get_last_informed_column(position_y)){
-			pass_focus(position_x,position_y,++position_x,position_y);    
+			var aux =position_x+1;
+			while( get_value(aux,position_y)=='') aux++;
+			pass_focus(position_x,position_y,aux,position_y);    
+			position_x=aux;
 			most_x_know =position_x;
 		}
 	}
@@ -154,15 +158,22 @@
 		var y = y1;
 		empty_rows[y]=false;
 		for(var i=0;i<string.length;i++){
-			if(string.charAt(i)=='\t')
+			var char =string.charAt(i);
+			if(char=='\t'){
 				x+=4;
-			else if (string.charAt(i)=='\n'){
+				if (x>79){
+					x=0;
+					y++;
+				}
+				char='*';
+			}
+			set_value(x,y,char);
+			if (char=='\n'){
 				y++;
 				empty_rows[y]=false;
 				x=0;
+				char='^';
 			}
-			else
-				set_value(x,y,string.charAt(i));
 			if(x>79){
 				x=0;
 				if(y>23){
@@ -174,6 +185,7 @@
 		}
 
 	}
+	
 	function set_value(x,y,s){
 	//	console.log(s);
 		document.getElementById("c"+x+"r"+y).innerHTML = s;
